@@ -28,7 +28,7 @@ build: tigervnc
 	sudo apt install -y --no-install-recommends cmake libjpeg8 zlib1g libc6 libssl1.1 libpixman-1-0 libxfont2 libxau6 libxdmcp6 libstdc++6 libbz2-1.0 libfontenc1 libfreetype6 libbsd0 libglx0 libglvnd0 libpng16-16 libx11-6 libxcb1 libx11-dev libfltk1.3 libfltk1.3-dev libjpeg-turbo8-dev libpixman-1-dev libgettextpo-dev libgnutls28-dev gettext libpam0g-dev libxdo-dev libxdamage-dev libxfixes-dev libxrandr-dev libxtst-dev xorg-server-source xz-utils autoconf xutils-dev libtool libgl-dev libglx-dev libxkbfile-dev libxfont-dev  libgl1-mesa-dri libglu1-mesa-dev freeglut3-dev mesa-common-dev
 	mkdir build
 
-build/unix/xserver/: build/unix/vncserver/vncserver
+build/unix/xserver: build/unix/vncserver/vncserver
 	cd $(TIGERVNC_BUILDDIR)/unix && xz -d -c /usr/src/xorg-server.tar.xz  | tar xf -
 	mv $(TIGERVNC_BUILDDIR)/unix/xorg-server $(TIGERVNC_BUILDDIR)/unix/xserver
 	-cd $(TIGERVNC_BUILDDIR)/unix/xserver && patch -p1 < $(TIGERVNC_SRCDIR)/unix/xserver120.patch

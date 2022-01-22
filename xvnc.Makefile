@@ -1,3 +1,4 @@
+.PHONY: install preinstall
 
 MAKE_DEFAULTS := -j 4
 TIGERVNC_SRCDIR := $(PWD)/tigervnc
@@ -5,7 +6,9 @@ TIGERVNC_BUILDDIR := $(PWD)/build
 TIGERVNC_REPO := https://github.com/TigerVNC/tigervnc.git
 TIGERVNC_BRANCH := 1.12-branch
 PREFIX=/usr/local/tigervnc/tigervnc-1.12.0
-
+EXECUTABLES := vncconfig vncpasswd v0vncserver Xvnc
+ULBEXECS := $(foreach fname,$(EXECUTABLES),$(addprefix /usr/local/bin/,$(fname)))
+TIGEREXECS := $(foreach fname,$(EXECUTABLES),$(addprefix $(PREFIX)/bin/,$(fname)))
 
 default: $(PREFIX)/bin/Xvnc $(PREFIX)/libexec/vncserver
 
@@ -65,3 +68,12 @@ build/unix/xserver/Makefile: build/unix/xserver/configure
 
 $(TIGERVNC_BUILDDIR)/unix/xserver/hw/vnc/Xvnc: build/unix/xserver/Makefile
 	cd $(TIGERVNC_BUILDDIR)/unix/xserver &&  make $(MAKE_DEFAULTS) TIGERVNC_SRCDIR=$(TIGERVNC_SRCDIR) TIGERVNC_BUILDDIR=$(TIGERVNC_BUILDDIR)
+
+$(ULBEXECS): /usr/local/bin/%: $(PREFIX)/bin/%
+	cd /usr/local/bin && sudo ln -s $<
+
+$(TIGEREXECS): 
+	cd $(TIGERVNC_BUILDDIR)/unix && sudo make install
+	cd $(TIGERVNC_BUILDDIR)/unix/xserver && sudo make install
+
+install: $(ULBEXECS)
